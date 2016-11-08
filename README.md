@@ -8,6 +8,7 @@ Cross platform game engine/designer tool
 * SDL2_image
 * SDL2_ttf
 * SDL2_mixer
+* json-c
  
 ## Build Instructions (POSIX)
 1. Download the sources
