@@ -5,6 +5,7 @@
 #ifndef PROJECT_WINDOW_H
 #define PROJECT_WINDOW_H
 
+#include <string>
 #include <memory>
 #include "types.h"
 
