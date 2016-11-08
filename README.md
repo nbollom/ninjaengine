@@ -17,6 +17,9 @@ Cross platform game engine/designer tool
 4. Run cmake to generate the make files: `cmake ..`
 5. Run make: `make`
 
+(OSX users may need to specify the path to QT5 in the cmake command:
+`cmake .. -DCMAKE_PREFIX_PATH=/path/to/Qt/5.x/clang_64/`
+
 binaries will be created in the ./bin directory
 
 ## Build Instructions (Windows)
