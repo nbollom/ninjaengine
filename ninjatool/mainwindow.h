@@ -8,15 +8,15 @@
 #define PROJECT_MAINWINDOW_H
 
 class MainWindow : public QMainWindow {
+    Q_OBJECT
 
 public:
-    MainWindow();
-
-private slots:
-    void buttonPressed();
+    explicit MainWindow(QWidget *parent = Q_NULLPTR);
+    ~MainWindow();
 
 protected:
     void closeEvent(QCloseEvent *event) Q_DECL_OVERRIDE;
+    void buttonPressed();
 
 private:
     QWidget *center;
