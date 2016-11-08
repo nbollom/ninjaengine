@@ -3,6 +3,8 @@
 //
 
 #include "mainwindow.h"
+#include <QDesktopWidget>
+#include <QDebug>
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     setWindowTitle("NinjaTool");
