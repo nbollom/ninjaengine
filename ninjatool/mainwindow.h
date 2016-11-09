@@ -24,9 +24,10 @@ protected:
     void buttonPressed();
 
 private:
+    int selectedIndex;
     QWidget *center;
     QVBoxLayout *layout;
-    QList<QPushButton*> butons;
+    QList<QPushButton*> buttons;
     QList<QListView*> lists;
 
 };
