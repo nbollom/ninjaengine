@@ -7,6 +7,7 @@
 #include <QDebug>
 #include <QPropertyAnimation>
 #include <QParallelAnimationGroup>
+#include "objecttype.h"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     setWindowTitle("NinjaTool");
@@ -19,16 +20,24 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     center = new QWidget(this);
     setCentralWidget(center);
     layout = new QVBoxLayout();
+    layout->setSpacing(1);
     center->setLayout(layout);
     selectedIndex = 0;
-    for (int i = 0; i < 5; ++i) {
-        QPushButton *button = new QPushButton(QString("Button: ") + QString::number(i + 1), center);
+    int current = 0;
+    for (QList<ObjectType*>::iterator i = objectTypes.begin(); i != objectTypes.end(); ++i) {
+        ObjectType *type = *i;
+        QPushButton *button = new QPushButton(type->GetTitle(), center);
         button->setFixedHeight(30);
         connect(button, &QPushButton::pressed, this, &MainWindow::buttonPressed);
         buttons.append(button);
         layout->addWidget(button);
         QListView *list = new QListView(center);
-        list->setVisible(i == selectedIndex);
+        list->setSelectionMode(QListView::SingleSelection);
+        list->setSelectionBehavior(QListView::SelectRows);
+        list->setViewMode(QListView::ListMode);
+        list->setEditTriggers(QListView::NoEditTriggers);
+        list->setVisible(current++ == selectedIndex);
+        list->setModel(type->GetModel());
         lists.append(list);
         layout->addWidget(list);
     }
@@ -52,17 +61,17 @@ void MainWindow::closeEvent(QCloseEvent *event) {
 }
 
 void MainWindow::buttonPressed() {
-    qDebug() << "Clicked Button";
     QPushButton *button = (QPushButton*)sender();
     int selected = buttons.indexOf(button);
+    qDebug() << "Clicked Button " << (selected + 1);
     if (selected != selectedIndex) {
         QListView *current = lists[selectedIndex];
         QPropertyAnimation *currentAnimation = new QPropertyAnimation(current, "maximumHeight");
-        currentAnimation->setDuration(100);
+        currentAnimation->setDuration(200);
         currentAnimation->setEndValue(0);
         QListView * next = lists[selected];
         QPropertyAnimation *nextAnimation = new QPropertyAnimation(next, "maximumHeight");
-        nextAnimation->setDuration(100);
+        nextAnimation->setDuration(200);
         nextAnimation->setStartValue(0);
         nextAnimation->setEndValue(current->height());
         next->setVisible(true);
