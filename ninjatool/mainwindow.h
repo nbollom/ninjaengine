@@ -11,6 +11,7 @@
 #include <QList>
 #include <QPushButton>
 #include <QListView>
+#include <QToolBar>
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
@@ -21,11 +22,14 @@ public:
 
 protected:
     void closeEvent(QCloseEvent *event) Q_DECL_OVERRIDE;
-    void buttonPressed();
+    void closeApp();
+    void setupActions();
+    void typeButtonPressed();
 
 private:
     int selectedIndex;
     QWidget *center;
+    QToolBar *toolbar;
     QVBoxLayout *layout;
     QList<QPushButton*> buttons;
     QList<QListView*> lists;

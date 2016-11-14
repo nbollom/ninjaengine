@@ -7,6 +7,9 @@
 #include <QDebug>
 #include <QPropertyAnimation>
 #include <QParallelAnimationGroup>
+#include <QMenuBar>
+#include <QMenu>
+#include <QAction>
 #include "objecttype.h"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
@@ -15,8 +18,11 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     QDesktopWidget dw;
     int height = (int) (dw.screen()->height() * 0.9f);
     int width = (int) (dw.screen()->width() * 0.9f);
-    resize(320, height);
+    resize(400, height);
     move((int) ((dw.screen()->width() - width) / 2.0f), (int) ((dw.screen()->height() - height) / 2.0f));
+    toolbar = new QToolBar("Tools", this);
+    addToolBar(Qt::LeftToolBarArea, toolbar);
+    setupActions();
     center = new QWidget(this);
     setCentralWidget(center);
     layout = new QVBoxLayout();
@@ -28,7 +34,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
         ObjectType *type = *i;
         QPushButton *button = new QPushButton(type->GetTitle(), center);
         button->setFixedHeight(30);
-        connect(button, &QPushButton::pressed, this, &MainWindow::buttonPressed);
+        connect(button, &QPushButton::pressed, this, &MainWindow::typeButtonPressed);
         buttons.append(button);
         layout->addWidget(button);
         QListView *list = new QListView(center);
@@ -60,7 +66,49 @@ void MainWindow::closeEvent(QCloseEvent *event) {
     qDebug() << "Closing";
 }
 
-void MainWindow::buttonPressed() {
+void MainWindow::closeApp() {
+    close();
+}
+
+static inline void AddToMenu(QAction *action, QMenu *menu) {
+    menu->addAction(action);
+}
+
+static inline void AddToMenuAndBar(QAction *action, QMenu *menu, QToolBar *bar) {
+    menu->addAction(action);
+    bar->addAction(action);
+}
+
+void MainWindow::setupActions() {
+    {// File Menu
+        QMenu *fileMenu = new QMenu("File", this);
+
+        QAction *settings = new QAction(QIcon::fromTheme("preferences-system"), "Settings", this);
+        AddToMenu(settings, fileMenu);
+
+        QAction *quit = new QAction(QIcon::fromTheme("application-exit"), "Exit", this);
+        connect(quit, &QAction::triggered, this, &MainWindow::closeApp);
+        AddToMenu(quit, fileMenu);
+
+        menuBar()->addMenu(fileMenu);
+    }
+    {// Project Menu
+        QMenu *projectMenu = new QMenu("Project", this);
+
+        QAction *newProject = new QAction(QIcon::fromTheme("document-new"), "New Project", this);
+        AddToMenuAndBar(newProject, projectMenu, toolbar);
+
+        QAction *loadProject = new QAction(QIcon::fromTheme("document-open"), "Load Project", this);
+        AddToMenuAndBar(loadProject, projectMenu, toolbar);
+
+        QAction *projectSettings = new QAction(QIcon::fromTheme("document-properties"), "Project Settings", this);
+        AddToMenuAndBar(projectSettings, projectMenu, toolbar);
+
+        menuBar()->addMenu(projectMenu);
+    }
+}
+
+void MainWindow::typeButtonPressed() {
     QPushButton *button = (QPushButton*)sender();
     int selected = buttons.indexOf(button);
     qDebug() << "Clicked Button " << (selected + 1);
