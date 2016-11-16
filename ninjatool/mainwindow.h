@@ -12,6 +12,7 @@
 #include <QPushButton>
 #include <QListView>
 #include <QToolBar>
+#include "documentwidget.h"
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
@@ -21,10 +22,18 @@ public:
     ~MainWindow();
 
 protected:
+    void SetupActions();
+    DocumentWidget *FindOpenDocument(QString type, QString name);
+
+    // Window event overloads
     void closeEvent(QCloseEvent *event) Q_DECL_OVERRIDE;
-    void closeApp();
-    void setupActions();
+
+    // Carousel slots
     void typeButtonPressed();
+
+    // Action slots
+    void closeApp();
+    void showSettingsScreen();
 
 private:
     int selectedIndex;
@@ -33,6 +42,8 @@ private:
     QVBoxLayout *layout;
     QList<QPushButton*> buttons;
     QList<QListView*> lists;
+
+    QList<DocumentWidget*> openDocuments;
 
 };
 

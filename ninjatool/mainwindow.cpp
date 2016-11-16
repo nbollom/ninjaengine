@@ -10,7 +10,10 @@
 #include <QMenuBar>
 #include <QMenu>
 #include <QAction>
+#include <QCloseEvent>
+#include <QtCore/QCoreApplication>
 #include "objecttype.h"
+#include "ninjatoolsettingswidget.h"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     setWindowTitle("NinjaTool");
@@ -22,7 +25,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     move((int) ((dw.screen()->width() - width) / 2.0f), (int) ((dw.screen()->height() - height) / 2.0f));
     toolbar = new QToolBar("Tools", this);
     addToolBar(Qt::LeftToolBarArea, toolbar);
-    setupActions();
+    SetupActions();
     center = new QWidget(this);
     setCentralWidget(center);
     layout = new QVBoxLayout();
@@ -62,14 +65,6 @@ MainWindow::~MainWindow() {
     delete center;
 }
 
-void MainWindow::closeEvent(QCloseEvent *event) {
-    qDebug() << "Closing";
-}
-
-void MainWindow::closeApp() {
-    close();
-}
-
 static inline void AddToMenu(QAction *action, QMenu *menu) {
     menu->addAction(action);
 }
@@ -79,14 +74,21 @@ static inline void AddToMenuAndBar(QAction *action, QMenu *menu, QToolBar *bar) 
     bar->addAction(action);
 }
 
-void MainWindow::setupActions() {
+static inline QIcon icon_named(QString name) {
+    static const QString fallbackpath = "%1/Icons/%2.svg";
+    return QIcon::fromTheme(name, QIcon(fallbackpath.arg(QCoreApplication::applicationDirPath(), name)));
+//    return QIcon(fallbackpath.arg(QCoreApplication::applicationDirPath(), name));
+}
+
+void MainWindow::SetupActions() {
     {// File Menu
         QMenu *fileMenu = new QMenu("File", this);
 
-        QAction *settings = new QAction(QIcon::fromTheme("preferences-system"), "Settings", this);
+        QAction *settings = new QAction(icon_named("preferences-system"), "Settings", this);
+        connect(settings, &QAction::triggered, this, &MainWindow::showSettingsScreen);
         AddToMenu(settings, fileMenu);
 
-        QAction *quit = new QAction(QIcon::fromTheme("application-exit"), "Exit", this);
+        QAction *quit = new QAction(icon_named("application-exit"), "Exit", this);
         connect(quit, &QAction::triggered, this, &MainWindow::closeApp);
         AddToMenu(quit, fileMenu);
 
@@ -95,16 +97,41 @@ void MainWindow::setupActions() {
     {// Project Menu
         QMenu *projectMenu = new QMenu("Project", this);
 
-        QAction *newProject = new QAction(QIcon::fromTheme("document-new"), "New Project", this);
+        QAction *newProject = new QAction(icon_named("document-new"), "New Project", this);
         AddToMenuAndBar(newProject, projectMenu, toolbar);
 
-        QAction *loadProject = new QAction(QIcon::fromTheme("document-open"), "Load Project", this);
+        QAction *loadProject = new QAction(icon_named("document-open"), "Load Project", this);
         AddToMenuAndBar(loadProject, projectMenu, toolbar);
 
-        QAction *projectSettings = new QAction(QIcon::fromTheme("document-properties"), "Project Settings", this);
+        QAction *projectSettings = new QAction(icon_named("document-properties"), "Project Settings", this);
         AddToMenuAndBar(projectSettings, projectMenu, toolbar);
 
         menuBar()->addMenu(projectMenu);
+    }
+}
+
+DocumentWidget* MainWindow::FindOpenDocument(QString type, QString name) {
+    for (QList<DocumentWidget*>::iterator i = openDocuments.begin(); i != openDocuments.end(); ++i) {
+        DocumentWidget *widget = *i;
+        if (widget->GetDocumentType() == type && widget->GetDocumentType() == type) {
+            return widget;
+        }
+    }
+    return Q_NULLPTR;
+}
+
+void MainWindow::closeEvent(QCloseEvent *event) {
+    qDebug() << "Closing";
+    for(QList<DocumentWidget*>::iterator i = openDocuments.begin(); i != openDocuments.end(); ++i) {
+        DocumentWidget *window = *i;
+        if (window->SaveDocument()) { // Save first
+            window->close();
+            openDocuments.removeOne(window);
+            delete (window);
+        }
+        else {
+            event->ignore();
+        }
     }
 }
 
@@ -132,4 +159,20 @@ void MainWindow::typeButtonPressed() {
         animationGroup->start();
     }
     selectedIndex = selected;
+}
+
+void MainWindow::closeApp() {
+    close();
+}
+
+void MainWindow::showSettingsScreen() {
+    DocumentWidget *settings = FindOpenDocument(NinjaToolSettingsWidget::DocumentType, NinjaToolSettingsWidget::DocumentName);
+    if (settings == Q_NULLPTR) {
+        settings = new NinjaToolSettingsWidget();
+        openDocuments.append(settings);
+        settings->show();
+    } else {
+        settings->activateWindow();
+        settings->raise();
+    }
 }
