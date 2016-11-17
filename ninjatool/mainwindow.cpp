@@ -75,9 +75,13 @@ static inline void AddToMenuAndBar(QAction *action, QMenu *menu, QToolBar *bar) 
 }
 
 static inline QIcon icon_named(QString name) {
+#ifdef __APPLE__
+    static const QString fallbackpath = "%1/../Resources/%2.svg";
+    return QPixmap(fallbackpath.arg(QCoreApplication::applicationDirPath(), name));
+#else
     static const QString fallbackpath = "%1/Icons/%2.svg";
     return QIcon::fromTheme(name, QIcon(fallbackpath.arg(QCoreApplication::applicationDirPath(), name)));
-//    return QIcon(fallbackpath.arg(QCoreApplication::applicationDirPath(), name));
+#endif
 }
 
 void MainWindow::SetupActions() {
