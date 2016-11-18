@@ -108,3 +108,63 @@ void SettingsManager::SetString(QString key, std::string value) {
     Value *v = processKeySections(key, true);
     v->SetString(value.c_str(), (int)value.length(), d.GetAllocator());
 }
+
+int SettingsManager::GetInt(QString key, int defaultValue) {
+    Value *v = processKeySections(key);
+    if (v == nullptr || !v->IsInt()) {
+        return defaultValue;
+    }
+    else {
+        return v->GetInt();
+    }
+}
+
+void SettingsManager::SetInt(QString key, int value) {
+    Value *v = processKeySections(key, true);
+    v->SetInt(value);
+}
+
+int64_t SettingsManager::GetInt64(QString key, int64_t defaultValue) {
+    Value *v = processKeySections(key);
+    if (v == nullptr || !v->IsInt64()) {
+        return defaultValue;
+    }
+    else {
+        return v->GetInt64();
+    }
+}
+
+void SettingsManager::SetInt64(QString key, int64_t value) {
+    Value *v = processKeySections(key, true);
+    v->SetInt64(value);
+}
+
+uint SettingsManager::GetUInt(QString key, uint defaultValue) {
+    Value *v = processKeySections(key);
+    if (v == nullptr || !v->IsInt()) {
+        return defaultValue;
+    }
+    else {
+        return v->GetUint();
+    }
+}
+
+void SettingsManager::SetUInt(QString key, uint value) {
+    Value *v = processKeySections(key, true);
+    v->SetUint(value);
+}
+
+uint64_t SettingsManager::GetUInt64(QString key, uint64_t defaultValue) {
+    Value *v = processKeySections(key);
+    if (v == nullptr || !v->IsUint64()) {
+        return defaultValue;
+    }
+    else {
+        return v->GetUint64();
+    }
+}
+
+void SettingsManager::SetUInt64(QString key, uint64_t value) {
+    Value *v = processKeySections(key, true);
+    v->SetUint64(value);
+}

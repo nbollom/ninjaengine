@@ -26,6 +26,10 @@ public:
     static bool Sync();
     DEFINE_GET_SET(bool, GetBool, SetBool)
     DEFINE_GET_SET(std::string, GetString, SetString)
+    DEFINE_GET_SET(int, GetInt, SetInt)
+    DEFINE_GET_SET(int64_t, GetInt64, SetInt64)
+    DEFINE_GET_SET(uint, GetUInt, SetUInt)
+    DEFINE_GET_SET(uint64_t , GetUInt64, SetUInt64)
 };
 
 #endif //PROJECT_SETTINGSMANAGER_H
