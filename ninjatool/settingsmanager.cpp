@@ -36,7 +36,8 @@ void SettingsManager::Init(QString file) {
 }
 
 void SettingsManager::Free() {
-    Sync();
+    // Do I need to free anything?
+    // Sync should not be called here because unsync changes are considered not wanted
 }
 
 bool SettingsManager::Sync() {
@@ -94,19 +95,21 @@ void SettingsManager::SetBool(QString key, bool value) {
     v->SetBool(value);
 }
 
-string SettingsManager::GetString(QString key, string defaultValue) {
+QString SettingsManager::GetString(QString key, QString defaultValue) {
     Value *v = processKeySections(key);
     if (v == nullptr || !v->IsString()) {
         return defaultValue;
     }
     else {
-        return v->GetString();
+        return QString(v->GetString());
     }
 }
 
-void SettingsManager::SetString(QString key, std::string value) {
+void SettingsManager::SetString(QString key, QString value) {
     Value *v = processKeySections(key, true);
-    v->SetString(value.c_str(), (int)value.length(), d.GetAllocator());
+    string valueText = stringFromQString(value);
+    SizeType length = (SizeType)valueText.length();
+    v->SetString(valueText.c_str(), length, d.GetAllocator());
 }
 
 int SettingsManager::GetInt(QString key, int defaultValue) {
@@ -167,4 +170,56 @@ uint64_t SettingsManager::GetUInt64(QString key, uint64_t defaultValue) {
 void SettingsManager::SetUInt64(QString key, uint64_t value) {
     Value *v = processKeySections(key, true);
     v->SetUint64(value);
+}
+
+float SettingsManager::GetFloat(QString key, float defaultValue) {
+    Value *v = processKeySections(key);
+    if (v == nullptr || !v->IsFloat()) {
+        return defaultValue;
+    }
+    else {
+        return v->GetFloat();
+    }
+}
+
+void SettingsManager::SetFloat(QString key, float value) {
+    Value *v = processKeySections(key, true);
+    v->SetFloat(value);
+}
+
+double SettingsManager::GetDouble(QString key, double defaultValue) {
+    Value *v = processKeySections(key);
+    if (v == nullptr || !v->IsDouble()) {
+        return defaultValue;
+    }
+    else {
+        return v->GetDouble();
+    }
+}
+
+void SettingsManager::SetDouble(QString key, double value) {
+    Value *v = processKeySections(key);
+    v->SetDouble(value);
+}
+
+void SettingsManager::DeleteKey(QString key) {
+    if (!key.length()) {
+        return;
+    }
+    QStringList parts = key.split(".");
+    Value *v = &d;
+    Value *p = nullptr;
+    for (QStringList::iterator i = parts.begin(); i != parts.end(); ++i) {
+        string part = stringFromQString(*i);
+        if (!(v->IsObject() && v->HasMember(part.c_str()))) {
+            v = nullptr;
+            break;
+        }
+        p = v;
+        v = &(*v)[part.c_str()];
+    }
+    if (v != nullptr && p != nullptr) { // p should never be nullptr but this check will silence the warning
+        string lastKeyPath = stringFromQString(parts.last());
+        p->RemoveMember(lastKeyPath.c_str());
+    }
 }

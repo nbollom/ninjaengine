@@ -14,15 +14,20 @@
 #include <QtCore/QCoreApplication>
 #include "objecttype.h"
 #include "ninjatoolsettingswidget.h"
+#include "settingsmanager.h"
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
+    QString configPath = QCoreApplication::applicationDirPath() + "/config.json";
+    SettingsManager::Init(configPath);
     setWindowTitle("NinjaTool");
     setMinimumSize(320, 320);
     QDesktopWidget dw;
     int height = (int) (dw.screen()->height() * 0.9f);
     int width = (int) (dw.screen()->width() * 0.9f);
-    resize(400, height);
-    move((int) ((dw.screen()->width() - width) / 2.0f), (int) ((dw.screen()->height() - height) / 2.0f));
+    resize(SettingsManager::GetInt("Layout.MainWindow.Width", 400), SettingsManager::GetInt("Layout.MainWindow.Height", height));
+    int x = (int) ((dw.screen()->width() - width) / 2.0f);
+    int y = (int) ((dw.screen()->height() - height) / 2.0f);
+    move(SettingsManager::GetInt("Layout.MainWindow.X", x), SettingsManager::GetInt("Layout.MainWindow.Y", y));
     toolbar = new QToolBar("Tools", this);
     addToolBar(Qt::LeftToolBarArea, toolbar);
     SetupActions();
@@ -50,6 +55,7 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
         lists.append(list);
         layout->addWidget(list);
     }
+    loaded = true;
 }
 
 MainWindow::~MainWindow() {
@@ -63,6 +69,7 @@ MainWindow::~MainWindow() {
     lists.clear();
     delete layout;
     delete center;
+    SettingsManager::Free();
 }
 
 static inline void AddToMenu(QAction *action, QMenu *menu) {
@@ -139,6 +146,24 @@ void MainWindow::closeEvent(QCloseEvent *event) {
     }
 }
 
+void MainWindow::resizeEvent(QResizeEvent *event) {
+    QMainWindow::resizeEvent(event);
+    if (loaded && SettingsManager::GetBool("Settings.RememberWindowLayout", false)) {
+        SettingsManager::SetInt("Layout.MainWindow.Width", width());
+        SettingsManager::SetInt("Layout.MainWindow.Height", height());
+        SettingsManager::Sync();
+    }
+}
+
+void MainWindow::moveEvent(QMoveEvent *event) {
+    QMainWindow::moveEvent(event);
+    if (loaded &&SettingsManager::GetBool("Settings.RememberWindowLayout", false)) {
+        SettingsManager::SetInt("Layout.MainWindow.X", x());
+        SettingsManager::SetInt("Layout.MainWindow.Y", y());
+        SettingsManager::Sync();
+    }
+}
+
 void MainWindow::typeButtonPressed() {
     QPushButton *button = (QPushButton*)sender();
     int selected = buttons.indexOf(button);
@@ -173,10 +198,16 @@ void MainWindow::showSettingsScreen() {
     DocumentWidget *settings = FindOpenDocument(NinjaToolSettingsWidget::DocumentType, NinjaToolSettingsWidget::DocumentName);
     if (settings == Q_NULLPTR) {
         settings = new NinjaToolSettingsWidget();
+        connect(settings, &DocumentWidget::widgetClosed, this, &MainWindow::settingsClosed);
         openDocuments.append(settings);
         settings->show();
     } else {
         settings->activateWindow();
         settings->raise();
     }
+}
+
+void MainWindow::settingsClosed() {
+    DocumentWidget *settings = FindOpenDocument(NinjaToolSettingsWidget::DocumentType, NinjaToolSettingsWidget::DocumentName);
+    openDocuments.removeOne(settings);
 }

@@ -25,11 +25,14 @@ public:
     static void Free();
     static bool Sync();
     DEFINE_GET_SET(bool, GetBool, SetBool)
-    DEFINE_GET_SET(std::string, GetString, SetString)
+    DEFINE_GET_SET(QString, GetString, SetString)
     DEFINE_GET_SET(int, GetInt, SetInt)
     DEFINE_GET_SET(int64_t, GetInt64, SetInt64)
     DEFINE_GET_SET(uint, GetUInt, SetUInt)
     DEFINE_GET_SET(uint64_t , GetUInt64, SetUInt64)
+    DEFINE_GET_SET(float, GetFloat, SetFloat)
+    DEFINE_GET_SET(double, GetDouble, SetDouble)
+    static void DeleteKey(QString key);
 };
 
 #endif //PROJECT_SETTINGSMANAGER_H

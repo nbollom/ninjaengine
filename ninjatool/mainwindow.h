@@ -27,6 +27,8 @@ protected:
 
     // Window event overloads
     void closeEvent(QCloseEvent *event) Q_DECL_OVERRIDE;
+    void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
+    void moveEvent(QMoveEvent *event) Q_DECL_OVERRIDE;
 
     // Carousel slots
     void typeButtonPressed();
@@ -34,8 +36,10 @@ protected:
     // Action slots
     void closeApp();
     void showSettingsScreen();
+    void settingsClosed();
 
 private:
+    bool loaded; // ignore layout events until true
     int selectedIndex;
     QWidget *center;
     QToolBar *toolbar;

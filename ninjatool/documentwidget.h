@@ -15,6 +15,15 @@ public:
     virtual QString GetDocumentName() = 0;
     virtual bool SaveDocument() = 0;
 
+signals:
+    void widgetClosed();
+
+protected:
+    void closeEvent(QCloseEvent *event) Q_DECL_OVERRIDE {
+        SaveDocument();
+        emit widgetClosed();
+    }
+
 };
 
 #endif //PROJECT_DOCUMENTWIDGET_H
