@@ -15,6 +15,9 @@
 #include "objecttype.h"
 #include "ninjatoolsettingswidget.h"
 #include "settingsmanager.h"
+#include "settingsconstants.h"
+
+const QString WINDOW_KEY = "MainWindow";
 
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     QString configPath = QCoreApplication::applicationDirPath() + "/config.json";
@@ -24,10 +27,16 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     QDesktopWidget dw;
     int height = (int) (dw.screen()->height() * 0.9f);
     int width = (int) (dw.screen()->width() * 0.9f);
-    resize(SettingsManager::GetInt("Layout.MainWindow.Width", 400), SettingsManager::GetInt("Layout.MainWindow.Height", height));
+    resize(
+            SettingsManager::GetInt(BuildKey(3, LAYOUT_KEY, WINDOW_KEY, WIDTH_KEY), 400),
+            SettingsManager::GetInt(BuildKey(3, LAYOUT_KEY, WINDOW_KEY, HEIGHT_KEY), height)
+    );
     int x = (int) ((dw.screen()->width() - width) / 2.0f);
     int y = (int) ((dw.screen()->height() - height) / 2.0f);
-    move(SettingsManager::GetInt("Layout.MainWindow.X", x), SettingsManager::GetInt("Layout.MainWindow.Y", y));
+    move(
+            SettingsManager::GetInt(BuildKey(3, LAYOUT_KEY, WINDOW_KEY, X_KEY), x),
+            SettingsManager::GetInt(BuildKey(3, LAYOUT_KEY, WINDOW_KEY, Y_KEY), y)
+    );
     toolbar = new QToolBar("Tools", this);
     addToolBar(Qt::LeftToolBarArea, toolbar);
     SetupActions();
@@ -131,6 +140,16 @@ DocumentWidget* MainWindow::FindOpenDocument(QString type, QString name) {
     return Q_NULLPTR;
 }
 
+void MainWindow::SaveLayout() {
+    if (loaded && SettingsManager::GetBool(REMEMBER_LAYOUT_KEY, REMEMBER_LAYOUT_DEFAULT)) {
+        SettingsManager::SetInt(BuildKey(3, LAYOUT_KEY, WINDOW_KEY, WIDTH_KEY), width());
+        SettingsManager::SetInt(BuildKey(3, LAYOUT_KEY, WINDOW_KEY, HEIGHT_KEY), height());
+        SettingsManager::SetInt(BuildKey(3, LAYOUT_KEY, WINDOW_KEY, X_KEY), x());
+        SettingsManager::SetInt(BuildKey(3, LAYOUT_KEY, WINDOW_KEY, Y_KEY), y());
+        SettingsManager::Sync();
+    }
+}
+
 void MainWindow::closeEvent(QCloseEvent *event) {
     qDebug() << "Closing";
     for(QList<DocumentWidget*>::iterator i = openDocuments.begin(); i != openDocuments.end(); ++i) {
@@ -148,20 +167,12 @@ void MainWindow::closeEvent(QCloseEvent *event) {
 
 void MainWindow::resizeEvent(QResizeEvent *event) {
     QMainWindow::resizeEvent(event);
-    if (loaded && SettingsManager::GetBool("Settings.RememberWindowLayout", false)) {
-        SettingsManager::SetInt("Layout.MainWindow.Width", width());
-        SettingsManager::SetInt("Layout.MainWindow.Height", height());
-        SettingsManager::Sync();
-    }
+    SaveLayout();
 }
 
 void MainWindow::moveEvent(QMoveEvent *event) {
     QMainWindow::moveEvent(event);
-    if (loaded &&SettingsManager::GetBool("Settings.RememberWindowLayout", false)) {
-        SettingsManager::SetInt("Layout.MainWindow.X", x());
-        SettingsManager::SetInt("Layout.MainWindow.Y", y());
-        SettingsManager::Sync();
-    }
+    SaveLayout();
 }
 
 void MainWindow::typeButtonPressed() {
@@ -210,4 +221,8 @@ void MainWindow::showSettingsScreen() {
 void MainWindow::settingsClosed() {
     DocumentWidget *settings = FindOpenDocument(NinjaToolSettingsWidget::DocumentType, NinjaToolSettingsWidget::DocumentName);
     openDocuments.removeOne(settings);
+}
+
+void MainWindow::settingsChanged() {
+
 }

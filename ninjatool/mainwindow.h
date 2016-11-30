@@ -14,6 +14,8 @@
 #include <QToolBar>
 #include "documentwidget.h"
 
+
+
 class MainWindow : public QMainWindow {
     Q_OBJECT
 
@@ -24,6 +26,7 @@ public:
 protected:
     void SetupActions();
     DocumentWidget *FindOpenDocument(QString type, QString name);
+    void SaveLayout();
 
     // Window event overloads
     void closeEvent(QCloseEvent *event) Q_DECL_OVERRIDE;
@@ -36,6 +39,7 @@ protected:
     // Action slots
     void closeApp();
     void showSettingsScreen();
+    void settingsChanged();
     void settingsClosed();
 
 private:

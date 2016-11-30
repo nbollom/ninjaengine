@@ -7,7 +7,7 @@ find_package(Qt5Widgets)
 set(CMAKE_AUTOMOC TRUE)
 find_package(RapidJSON REQUIRED)
 
-set(SOURCES main.cpp mainwindow.cpp mainwindow.h objecttype.cpp objecttype.h objecttypescene.cpp objecttypescene.h documentwidget.h ninjatoolsettingswidget.cpp ninjatoolsettingswidget.h settingsmanager.cpp settingsmanager.h)
+set(SOURCES main.cpp mainwindow.cpp mainwindow.h objecttype.cpp objecttype.h objecttypescene.cpp objecttypescene.h documentwidget.h ninjatoolsettingswidget.cpp ninjatoolsettingswidget.h settingsmanager.cpp settingsmanager.h settingsconstants.cpp settingsconstants.h)
 set(RESOURCES Icons/document-new.svg Icons/document-open.svg Icons/document-properties.svg Icons/preferences-system.svg)
 
 add_executable(ninjatool ${SOURCES} ${RESOURCES})

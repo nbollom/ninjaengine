@@ -17,6 +17,7 @@ private:
     QGridLayout *layout;
     QLabel *rememberLayoutLabel;
     QCheckBox *rememberLayoutCheckbox;
+    int changes;
 
 protected:
     void RememberLayoutChecked(bool checked);
@@ -29,6 +30,9 @@ public:
     QString GetDocumentType() override;
     QString GetDocumentName() override;
     bool SaveDocument() override;
+
+signals:
+    void settingsChanged();
 
 };
 
