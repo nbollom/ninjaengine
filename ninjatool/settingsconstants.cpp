@@ -14,16 +14,19 @@ const QString Y_KEY = "Y";
 const QString WIDTH_KEY = "Width";
 const QString HEIGHT_KEY = "Height";
 
-QString BuildKey(int count, ...) {
-    QString key;
-    va_list args;
-    va_start(args, count);
-    for (int i = 0; i < count; ++i) {
-        if (key.length()) {
-            key += ".";
-        }
-        key += va_arg(args, QString);
+QString BuildKey(QString s1, QString s2, QString s3, QString s4, QString s5, QString s6) {
+    QString key = s1 + "." + s2;
+    if (s3 != nullptr) {
+        key += "." + s3;
     }
-    va_end(args);
+    if (s4 != nullptr) {
+        key += "." + s4;
+    }
+    if (s5 != nullptr) {
+        key += "." + s5;
+    }
+    if (s6 != nullptr) {
+        key += "." + s6;
+    }
     return key;
 }

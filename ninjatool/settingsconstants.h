@@ -17,6 +17,6 @@ extern const QString Y_KEY;
 extern const QString WIDTH_KEY;
 extern const QString HEIGHT_KEY;
 
-QString BuildKey(int count, ...);
+QString BuildKey(QString s1, QString s2, QString s3 = nullptr, QString s4 = nullptr, QString s5 = nullptr, QString s6 = nullptr);
 
 #endif //PROJECT_SETTINGSCONSTANTS_H

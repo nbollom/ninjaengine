@@ -28,14 +28,14 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     int height = (int) (dw.screen()->height() * 0.9f);
     int width = (int) (dw.screen()->width() * 0.9f);
     resize(
-            SettingsManager::GetInt(BuildKey(3, LAYOUT_KEY, WINDOW_KEY, WIDTH_KEY), 400),
-            SettingsManager::GetInt(BuildKey(3, LAYOUT_KEY, WINDOW_KEY, HEIGHT_KEY), height)
+            SettingsManager::GetInt(BuildKey(LAYOUT_KEY, WINDOW_KEY, WIDTH_KEY), 400),
+            SettingsManager::GetInt(BuildKey(LAYOUT_KEY, WINDOW_KEY, HEIGHT_KEY), height)
     );
     int x = (int) ((dw.screen()->width() - width) / 2.0f);
     int y = (int) ((dw.screen()->height() - height) / 2.0f);
     move(
-            SettingsManager::GetInt(BuildKey(3, LAYOUT_KEY, WINDOW_KEY, X_KEY), x),
-            SettingsManager::GetInt(BuildKey(3, LAYOUT_KEY, WINDOW_KEY, Y_KEY), y)
+            SettingsManager::GetInt(BuildKey(LAYOUT_KEY, WINDOW_KEY, X_KEY), x),
+            SettingsManager::GetInt(BuildKey(LAYOUT_KEY, WINDOW_KEY, Y_KEY), y)
     );
     toolbar = new QToolBar("Tools", this);
     addToolBar(Qt::LeftToolBarArea, toolbar);
@@ -142,10 +142,10 @@ DocumentWidget* MainWindow::FindOpenDocument(QString type, QString name) {
 
 void MainWindow::SaveLayout() {
     if (loaded && SettingsManager::GetBool(REMEMBER_LAYOUT_KEY, REMEMBER_LAYOUT_DEFAULT)) {
-        SettingsManager::SetInt(BuildKey(3, LAYOUT_KEY, WINDOW_KEY, WIDTH_KEY), width());
-        SettingsManager::SetInt(BuildKey(3, LAYOUT_KEY, WINDOW_KEY, HEIGHT_KEY), height());
-        SettingsManager::SetInt(BuildKey(3, LAYOUT_KEY, WINDOW_KEY, X_KEY), x());
-        SettingsManager::SetInt(BuildKey(3, LAYOUT_KEY, WINDOW_KEY, Y_KEY), y());
+        SettingsManager::SetInt(BuildKey(LAYOUT_KEY, WINDOW_KEY, WIDTH_KEY), width());
+        SettingsManager::SetInt(BuildKey(LAYOUT_KEY, WINDOW_KEY, HEIGHT_KEY), height());
+        SettingsManager::SetInt(BuildKey(LAYOUT_KEY, WINDOW_KEY, X_KEY), x());
+        SettingsManager::SetInt(BuildKey(LAYOUT_KEY, WINDOW_KEY, Y_KEY), y());
         SettingsManager::Sync();
     }
 }
