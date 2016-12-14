@@ -153,10 +153,11 @@ void MainWindow::closeApp() {
 }
 
 void MainWindow::showSettingsScreen() {
-    DocumentWidget *settings = FindOpenDocument(SettingsWidget::DocumentType, SettingsWidget::DocumentName);
+    SettingsWidget *settings = (SettingsWidget*)FindOpenDocument(SettingsWidget::DocumentType, SettingsWidget::DocumentName);
     if (settings == Q_NULLPTR) {
         settings = new SettingsWidget();
-        connect(settings, &DocumentWidget::widgetClosed, this, &MainWindow::settingsClosed);
+        connect(settings, &SettingsWidget::settingsChanged, this, &MainWindow::settingsChanged);
+        connect(settings, &DocumentWidget::widgetClosed, this, &MainWindow::widgetClosed);
         openDocuments.append(settings);
         settings->show();
     } else {
@@ -165,11 +166,10 @@ void MainWindow::showSettingsScreen() {
     }
 }
 
-void MainWindow::settingsClosed() {
-    DocumentWidget *settings = FindOpenDocument(SettingsWidget::DocumentType, SettingsWidget::DocumentName);
-    openDocuments.removeOne(settings);
+void MainWindow::settingsChanged() {
+    SaveLayout();
 }
 
-void MainWindow::settingsChanged() {
-
+void MainWindow::widgetClosed(DocumentWidget *widget) {
+    openDocuments.removeOne(widget);
 }

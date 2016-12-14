@@ -16,12 +16,12 @@ public:
     virtual bool SaveDocument() = 0;
 
 signals:
-    void widgetClosed();
+    void widgetClosed(DocumentWidget *widget);
 
 protected:
     void closeEvent(QCloseEvent *event) Q_DECL_OVERRIDE {
         SaveDocument();
-        emit widgetClosed();
+        emit widgetClosed(this);
     }
 
 };
