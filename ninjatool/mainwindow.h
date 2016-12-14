@@ -7,14 +7,11 @@
 
 #include <QMainWindow>
 #include <QWidget>
-#include <QVBoxLayout>
-#include <QList>
-#include <QPushButton>
-#include <QListView>
 #include <QToolBar>
-#include "documentwidget.h"
-
-
+#include <QTabWidget>
+#include "editors/documentwidget.h"
+#include "objecttype.h"
+#include "carousel.h"
 
 class MainWindow : public QMainWindow {
     Q_OBJECT
@@ -33,9 +30,6 @@ protected:
     void resizeEvent(QResizeEvent *event) Q_DECL_OVERRIDE;
     void moveEvent(QMoveEvent *event) Q_DECL_OVERRIDE;
 
-    // Carousel slots
-    void typeButtonPressed();
-
     // Action slots
     void closeApp();
     void showSettingsScreen();
@@ -44,15 +38,11 @@ protected:
 
 private:
     bool loaded; // ignore layout events until true
-    int selectedIndex;
-    QWidget *center;
+    QTabWidget *tabs;
     QToolBar *toolbar;
-    QVBoxLayout *layout;
-    QList<QPushButton*> buttons;
-    QList<QListView*> lists;
-
     QList<DocumentWidget*> openDocuments;
-
+    Carousel *objects;
+    Carousel *resources;
 };
 
 #endif //PROJECT_MAINWINDOW_H

@@ -5,16 +5,16 @@
 #ifndef PROJECT_OBJECTTYPESCENE_H
 #define PROJECT_OBJECTTYPESCENE_H
 
-#include "objecttype.h"
+#include "../objecttype.h"
 
-class ObjectTypeScene : public ObjectType {
+class Scene : public ObjectType {
     Q_OBJECT
 
 private:
     QStringList _list;
 
 public:
-    ObjectTypeScene();
+    Scene();
     QString GetTitle() override;
     QWidget* GetAddNewItemForm() override;
     QWidget* GetEditor(QString item) override;

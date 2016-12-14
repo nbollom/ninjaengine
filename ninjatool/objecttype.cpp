@@ -3,10 +3,15 @@
 //
 
 #include "objecttype.h"
-#include "objecttypescene.h"
+#include "objects/scene.h"
+#include "resources/image.h"
 
 QList<ObjectType*> objectTypes = {
-        new ObjectTypeScene()
+    new Scene()
+};
+
+QList<ObjectType*> resourceTypes = {
+    new Image()
 };
 
 ObjectType::ObjectType() {

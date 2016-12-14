@@ -25,5 +25,6 @@ public:
 };
 
 extern QList<ObjectType*> objectTypes;
+extern QList<ObjectType*> resourceTypes;
 
 #endif //PROJECT_OBJECTTYPE_H

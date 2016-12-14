@@ -2,34 +2,34 @@
 // Created by nbollom on 14/11/16.
 //
 
-#include "ninjatoolsettingswidget.h"
-#include "settingsmanager.h"
-#include "settingsconstants.h"
+#include "settingswidget.h"
+#include "../settingsmanager.h"
+#include "../settingsconstants.h"
 
-const QString NinjaToolSettingsWidget::DocumentType = QString("NinjaTool");
-const QString NinjaToolSettingsWidget::DocumentName = QString("Settings");
+const QString SettingsWidget::DocumentType = QString("NinjaTool");
+const QString SettingsWidget::DocumentName = QString("Settings");
 
-NinjaToolSettingsWidget::NinjaToolSettingsWidget() {
+SettingsWidget::SettingsWidget() {
     layout = new QGridLayout(this);
     this->setLayout(layout);
     rememberLayoutLabel = new QLabel("Remember Window Layout", this);
     layout->addWidget(rememberLayoutLabel, 0, 0);
     rememberLayoutCheckbox = new QCheckBox("", this);
     rememberLayoutCheckbox->setChecked(SettingsManager::GetBool(REMEMBER_LAYOUT_KEY, REMEMBER_LAYOUT_DEFAULT));
-    connect(rememberLayoutCheckbox, &QCheckBox::toggled, this, &NinjaToolSettingsWidget::RememberLayoutChecked);
+    connect(rememberLayoutCheckbox, &QCheckBox::toggled, this, &SettingsWidget::RememberLayoutChecked);
     layout->addWidget(rememberLayoutCheckbox, 0, 1);
     changes = 0;
 }
 
-QString NinjaToolSettingsWidget::GetDocumentType() {
-    return NinjaToolSettingsWidget::DocumentType;
+QString SettingsWidget::GetDocumentType() {
+    return SettingsWidget::DocumentType;
 }
 
-QString NinjaToolSettingsWidget::GetDocumentName() {
-    return NinjaToolSettingsWidget::DocumentName;
+QString SettingsWidget::GetDocumentName() {
+    return SettingsWidget::DocumentName;
 }
 
-bool NinjaToolSettingsWidget::SaveDocument() {
+bool SettingsWidget::SaveDocument() {
     if (SettingsManager::GetBool(REMEMBER_LAYOUT_KEY, REMEMBER_LAYOUT_DEFAULT)) {
         SettingsManager::DeleteKey(LAYOUT_KEY);
     }
@@ -40,7 +40,7 @@ bool NinjaToolSettingsWidget::SaveDocument() {
     return true;
 }
 
-void NinjaToolSettingsWidget::RememberLayoutChecked(bool checked) {
+void SettingsWidget::RememberLayoutChecked(bool checked) {
     changes += (SettingsManager::GetBool(REMEMBER_LAYOUT_KEY, REMEMBER_LAYOUT_DEFAULT) == checked ? -1 : 1);
     SettingsManager::SetBool(REMEMBER_LAYOUT_KEY, checked);
 }

@@ -10,7 +10,7 @@
 #include <QLabel>
 #include <QCheckBox>
 
-class NinjaToolSettingsWidget : public DocumentWidget {
+class SettingsWidget : public DocumentWidget {
     Q_OBJECT
 
 private:
@@ -26,7 +26,7 @@ public:
     static const QString DocumentType;
     static const QString DocumentName;
 
-    NinjaToolSettingsWidget();
+    SettingsWidget();
     QString GetDocumentType() override;
     QString GetDocumentName() override;
     bool SaveDocument() override;
