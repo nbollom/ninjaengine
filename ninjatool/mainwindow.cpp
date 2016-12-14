@@ -206,10 +206,11 @@ void MainWindow::closeApp() {
 }
 
 void MainWindow::showSettingsScreen() {
-    DocumentWidget *settings = FindOpenDocument(NinjaToolSettingsWidget::DocumentType, NinjaToolSettingsWidget::DocumentName);
+    NinjaToolSettingsWidget *settings = (NinjaToolSettingsWidget*)FindOpenDocument(NinjaToolSettingsWidget::DocumentType, NinjaToolSettingsWidget::DocumentName);
     if (settings == Q_NULLPTR) {
         settings = new NinjaToolSettingsWidget();
-        connect(settings, &DocumentWidget::widgetClosed, this, &MainWindow::settingsClosed);
+        connect(settings, &NinjaToolSettingsWidget::settingsChanged, this, &MainWindow::settingsChanged);
+        connect(settings, &DocumentWidget::widgetClosed, this, &MainWindow::widgetClosed);
         openDocuments.append(settings);
         settings->show();
     } else {
@@ -218,11 +219,10 @@ void MainWindow::showSettingsScreen() {
     }
 }
 
-void MainWindow::settingsClosed() {
-    DocumentWidget *settings = FindOpenDocument(NinjaToolSettingsWidget::DocumentType, NinjaToolSettingsWidget::DocumentName);
-    openDocuments.removeOne(settings);
+void MainWindow::settingsChanged() {
+    SaveLayout();
 }
 
-void MainWindow::settingsChanged() {
-
+void MainWindow::widgetClosed(DocumentWidget *widget) {
+    openDocuments.removeOne(widget);
 }

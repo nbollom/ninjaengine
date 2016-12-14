@@ -40,7 +40,7 @@ protected:
     void closeApp();
     void showSettingsScreen();
     void settingsChanged();
-    void settingsClosed();
+    void widgetClosed(DocumentWidget *widget);
 
 private:
     bool loaded; // ignore layout events until true
