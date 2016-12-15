@@ -15,7 +15,7 @@
 #include "editors/settingswidget.h"
 #include "settingsmanager.h"
 #include "settingsconstants.h"
-#include "editors/newwidget.h"
+#include "editors/newproject.h"
 
 const QString WINDOW_KEY = "MainWindow";
 
@@ -177,6 +177,8 @@ void MainWindow::widgetClosed(DocumentWidget *widget) {
 }
 
 void MainWindow::newProject() {
-    NewWidget *w = new NewWidget();
-    w->show();
+    NewProjectWidget *w = new NewProjectWidget();
+    if (w->exec() == QDialog::Accepted) {
+
+    }
 }

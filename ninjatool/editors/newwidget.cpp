@@ -2,7 +2,8 @@
 // Created by nbollom on 14/12/16.
 //
 
-#include <QtWidgets/QVBoxLayout>
+#include <QVBoxLayout>
+#include <QDebug>
 #include "newwidget.h"
 
 NewWidget::NewWidget() {
@@ -16,9 +17,23 @@ NewWidget::NewWidget() {
     QHBoxLayout *buttonLayout = new QHBoxLayout();
     buttonLayout->addStretch(1);
     buttonsWidget->setLayout(buttonLayout);
-    cancelButton = new QPushButton("Cancel", this);
-    buttonLayout->addWidget(cancelButton);
     okButton = new QPushButton("OK", this);
+    okButton->setAutoDefault(true);
+    okButton->setDefault(true);
+    connect(okButton, &QPushButton::pressed, this, &NewWidget::onOKPressed);
     buttonLayout->addWidget(okButton);
-    setWindowModality(Qt::ApplicationModal);
+    cancelButton = new QPushButton("Cancel", this);
+    connect(cancelButton, &QPushButton::pressed, this, &NewWidget::onCancelledPressed);
+    buttonLayout->addWidget(cancelButton);
+    setModal(true);
+}
+
+void NewWidget::onOKPressed() {
+    qDebug() << "OK pressed";
+    accept();
+}
+
+void NewWidget::onCancelledPressed() {
+    qDebug() << "Cancel pressed";
+    reject();
 }

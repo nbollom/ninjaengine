@@ -5,10 +5,10 @@
 #ifndef PROJECT_NEWWIDGET_H
 #define PROJECT_NEWWIDGET_H
 
-#include <QWidget>
-#include <QtWidgets/QPushButton>
+#include <QDialog>
+#include <QPushButton>
 
-class NewWidget : public QWidget {
+class NewWidget : public QDialog {
     Q_OBJECT
 
 public:
@@ -20,9 +20,8 @@ protected:
     QPushButton *okButton;
     QPushButton *cancelButton;
 
-signals:
-    void dialogOk();
-    void dialogCancel();
+    void onOKPressed();
+    void onCancelledPressed();
 
 };
 
