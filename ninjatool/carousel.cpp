@@ -10,7 +10,9 @@
 Carousel::Carousel(QList<ObjectType*> source) {
     selectedIndex = 0;
     QVBoxLayout *layout = new QVBoxLayout();
+#ifndef __APPLE__
     layout->setSpacing(1);
+#endif
     setLayout(layout);
     int current = 0;
     for (QList<ObjectType*>::iterator i = source.begin(); i != source.end(); ++i) {

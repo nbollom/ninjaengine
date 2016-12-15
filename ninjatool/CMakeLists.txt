@@ -9,7 +9,7 @@ find_package(RapidJSON REQUIRED)
 
 set(SOURCES main.cpp mainwindow.cpp mainwindow.h objecttype.cpp objecttype.h settingsmanager.cpp settingsmanager.h settingsconstants.cpp settingsconstants.h carousel.h carousel.cpp)
 set(ICONS Icons/document-new.svg Icons/document-open.svg Icons/document-properties.svg Icons/preferences-system.svg)
-set(EDITORS editors/documentwidget.h editors/settingswidget.cpp editors/settingswidget.h)
+set(EDITORS editors/documentwidget.h editors/settingswidget.cpp editors/settingswidget.h editors/newproject.cpp editors/newproject.h editors/newwidget.h editors/newwidget.cpp)
 set(OBJECTS objects/scene.cpp objects/scene.h)
 SET(RESOURCES resources/image.h resources/image.cpp)
 

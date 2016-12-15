@@ -35,6 +35,7 @@ protected:
     void showSettingsScreen();
     void settingsChanged();
     void widgetClosed(DocumentWidget *widget);
+    void newProject();
 
 private:
     bool loaded; // ignore layout events until true

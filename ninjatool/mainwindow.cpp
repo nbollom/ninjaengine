@@ -15,6 +15,7 @@
 #include "editors/settingswidget.h"
 #include "settingsmanager.h"
 #include "settingsconstants.h"
+#include "editors/newwidget.h"
 
 const QString WINDOW_KEY = "MainWindow";
 
@@ -91,6 +92,7 @@ void MainWindow::SetupActions() {
         QMenu *projectMenu = new QMenu("Project", this);
 
         QAction *newProject = new QAction(icon_named("document-new"), "New Project", this);
+        connect(newProject, &QAction::triggered, this, &MainWindow::newProject);
         AddToMenuAndBar(newProject, projectMenu, toolbar);
 
         QAction *loadProject = new QAction(icon_named("document-open"), "Load Project", this);
@@ -172,4 +174,9 @@ void MainWindow::settingsChanged() {
 
 void MainWindow::widgetClosed(DocumentWidget *widget) {
     openDocuments.removeOne(widget);
+}
+
+void MainWindow::newProject() {
+    NewWidget *w = new NewWidget();
+    w->show();
 }

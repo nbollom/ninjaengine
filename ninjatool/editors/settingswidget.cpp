@@ -19,6 +19,7 @@ SettingsWidget::SettingsWidget() {
     connect(rememberLayoutCheckbox, &QCheckBox::toggled, this, &SettingsWidget::RememberLayoutChecked);
     layout->addWidget(rememberLayoutCheckbox, 0, 1);
     changes = 0;
+    setWindowModality(Qt::ApplicationModal);
 }
 
 QString SettingsWidget::GetDocumentType() {
