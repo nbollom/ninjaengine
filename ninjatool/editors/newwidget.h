@@ -20,7 +20,7 @@ protected:
     QPushButton *okButton;
     QPushButton *cancelButton;
 
-    void onOKPressed();
+    virtual void onOKPressed();
     void onCancelledPressed();
 
 };

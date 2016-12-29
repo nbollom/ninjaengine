@@ -179,6 +179,8 @@ void MainWindow::widgetClosed(DocumentWidget *widget) {
 void MainWindow::newProject() {
     NewProjectWidget *w = new NewProjectWidget();
     if (w->exec() == QDialog::Accepted) {
+        QString projectName = w->GetProjectName();
+        QDir projectPath = w->GetProjectPath();
 
     }
 }

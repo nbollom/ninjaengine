@@ -4,6 +4,7 @@
 
 #include <QVBoxLayout>
 #include <QDebug>
+#include <QMessageBox>
 #include "newwidget.h"
 
 NewWidget::NewWidget() {

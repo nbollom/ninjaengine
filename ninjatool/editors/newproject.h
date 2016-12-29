@@ -15,6 +15,12 @@ class NewProjectWidget : public NewWidget {
 
 public:
     NewProjectWidget();
+    virtual ~NewProjectWidget();
+    QString GetProjectName();
+    QDir GetProjectPath();
+
+protected:
+    void onOKPressed() override;
 
 private:
     QLabel *nameLabel;
@@ -23,6 +29,9 @@ private:
     QLineEdit *pathText;
     QPushButton *pathSelectorButton;
     QFileDialog *pathBrowser = nullptr;
+
+    QString projectName;
+    QDir projectPath;
 
     void PathSelectorClicked();
     void PathSelectorOK();
