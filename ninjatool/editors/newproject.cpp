@@ -57,7 +57,7 @@ void NewProjectWidget::PathSelectorClicked() {
     if (pathText->text().length()) {
         pathBrowser->setDirectory(pathText->text());
     }
-    pathBrowser->show();
+    pathBrowser->exec();
 }
 
 void NewProjectWidget::PathSelectorOK() {
