@@ -13,7 +13,7 @@ set(EDITORS editors/documentwidget.h editors/settingswidget.cpp editors/settings
 set(OBJECTS objects/scene.cpp objects/scene.h)
 SET(RESOURCES resources/image.h resources/image.cpp)
 
-add_executable(ninjatool ${SOURCES} ${EDITORS} ${OBJECTS} ${RESOURCES} ${RESOURCES})
+add_executable(ninjatool ${SOURCES} ${EDITORS} ${OBJECTS} ${RESOURCES} ${ICONS})
 
 if (APPLE)
     SET_TARGET_PROPERTIES(ninjatool PROPERTIES MACOSX_BUNDLE TRUE)
