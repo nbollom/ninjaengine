@@ -1,3 +1,6 @@
 [submodule "ninjacore/anax"]
 	path = ninjacore/anax
 	url = https://github.com/miguelmartin75/anax.git
+[submodule "SQLiteCpp"]
+	path = SQLiteCpp
+	url = https://github.com/SRombauts/SQLiteCpp.git

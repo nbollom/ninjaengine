@@ -23,5 +23,5 @@ else()
     add_custom_command(TARGET ninjatool POST_BUILD COMMAND ${CMAKE_COMMAND} -E copy_directory ${PROJECT_SOURCE_DIR}/Icons ${CMAKE_ARCHIVE_OUTPUT_DIRECTORY}/Icons COMMENT "Copying Action Icons")
 endif()
 
-target_link_libraries(ninjatool ninjacore Qt5::Widgets)
+target_link_libraries(ninjatool ninjacore Qt5::Widgets SQLiteCpp sqlite3)
 include_directories(../ninjacore ${RapidJSON_INCLUDE_DIRS})

@@ -9,3 +9,8 @@ set(CMAKE_MODULE_PATH "${CMAKE_SOURCE_DIR}/cmake_modules" ${CMAKE_MODULE_PATH})
 add_subdirectory(ninjaengine)
 add_subdirectory(ninjacore)
 add_subdirectory(ninjatool)
+
+set(SQLITECPP_RUN_CPPLINT off)
+set(SQLITECPP_RUN_CPPCHECK off)
+
+add_subdirectory(SQLiteCpp)
