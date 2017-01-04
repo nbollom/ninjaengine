@@ -10,11 +10,12 @@ add_subdirectory(ninjaengine)
 add_subdirectory(ninjacore)
 add_subdirectory(ninjatool)
 
-set(SQLITECPP_RUN_CPPLINT off)
-set(SQLITECPP_RUN_CPPCHECK off)
-
 if(APPLE)
     set(BUILD_SHARED_LIBS NO) #fix SQLiteCpp linking on osx
 endif(APPLE)
 
+option(SQLITECPP_RUN_CPPCHECK "Run cppcheck C++ static analysis tool." OFF)
+option(SQLITECPP_RUN_CPPLINT "Run cpplint.py tool for Google C++ StyleGuide." OFF)
+
 add_subdirectory(SQLiteCpp)
+
