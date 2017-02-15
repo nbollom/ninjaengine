@@ -80,12 +80,19 @@ void NewProjectWidget::onOKPressed() {
         return;
     }
     QFileInfoList entryList = projectPath.entryInfoList(QDir::NoFilter, QDir::DirsFirst);
+    bool created = false;
     for (QFileInfoList::iterator i = entryList.begin(); i != entryList.end(); ++i) {
         QFileInfo fileInfo = *i;
         if (fileInfo.fileName() == projectName && fileInfo.isDir()) {
-            if (fileInfo.dir().exists(projectName + ".dat")) {
+            QDir path = projectPath;
+            path.cd(projectName);
+            created = true;
+            if (path.exists(projectName + ".dat")) {
                 if (QMessageBox::question(this, "Warning", "A project already exists at this location\nDo you wish to overwrite?") == QMessageBox::No) {
                     return;
+                }
+                else {
+                    //TODO: delete old db
                 }
             }
             break;
@@ -96,14 +103,13 @@ void NewProjectWidget::onOKPressed() {
                 QMessageBox::critical(this, "Error", "Cannot create a project with the name " + projectName + " in " + projectPath.absolutePath());
                 return;
             }
+            created = true;
             break;
         }
-        else {
-            if (!projectPath.mkdir(projectName)) {
-                QMessageBox::critical(this, "Error", "Cannot create a project with the name " + projectName + " in " + projectPath.absolutePath());
-                return;
-            }
-        }
+    }
+    if (!created && !projectPath.mkdir(projectName)) {
+        QMessageBox::critical(this, "Error", "Cannot create a project with the name " + projectName + " in " + projectPath.absolutePath());
+        return;
     }
     NewWidget::onOKPressed();
 }

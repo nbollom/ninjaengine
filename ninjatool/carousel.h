@@ -5,12 +5,16 @@
 #ifndef PROJECT_CAROUSEL_H
 #define PROJECT_CAROUSEL_H
 
-#include "objecttype.h"
 #include <QWidget>
 #include <QVBoxLayout>
 #include <QList>
 #include <QPushButton>
 #include <QListView>
+
+typedef enum {
+    CarouselTypeResources,
+    CarouselTypeObjects
+} CarouselType;
 
 class Carousel : public QWidget {
     Q_OBJECT
@@ -25,7 +29,7 @@ protected:
     void buttonPressed();
 
 public:
-    Carousel(QList<ObjectType*> source);
+    Carousel(CarouselType type);
     ~Carousel();
 };
 

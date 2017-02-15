@@ -7,18 +7,13 @@
 #include <rapidjson/filewritestream.h>
 #include <rapidjson/writer.h>
 #include <QtCore/QtCore>
+#include "tools.h"
 
 using namespace rapidjson;
 using namespace std;
 
 string SettingsManager::filePath = "";
 Document SettingsManager::d;
-
-inline string stringFromQString(QString value) {
-    QByteArray ba = value.toLatin1();
-    const char *bytes = ba;
-    return string(bytes);
-}
 
 void SettingsManager::Init(QString file) {
     filePath = stringFromQString(file);

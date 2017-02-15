@@ -3,11 +3,12 @@
 //
 
 #include "carousel.h"
+#include "projectmanager.h"
 #include <QDebug>
 #include <QPropertyAnimation>
 #include <QParallelAnimationGroup>
 
-Carousel::Carousel(QList<ObjectType*> source) {
+Carousel::Carousel(CarouselType type) {
     selectedIndex = 0;
     QVBoxLayout *layout = new QVBoxLayout();
 #ifndef __APPLE__
@@ -15,9 +16,10 @@ Carousel::Carousel(QList<ObjectType*> source) {
 #endif
     setLayout(layout);
     int current = 0;
-    for (QList<ObjectType*>::iterator i = source.begin(); i != source.end(); ++i) {
-        ObjectType *type = *i;
-        QPushButton *button = new QPushButton(type->GetTitle(), this);
+    QStringList sections = (type == CarouselTypeResources ? ProjectManager::GetResourceTypes() : ProjectManager::GetObjectTypes());
+    for (QStringList::iterator i = sections.begin(); i != sections.end(); ++i) {
+        QString section = *i;
+        QPushButton *button = new QPushButton(section, this);
         button->setFixedHeight(30);
         connect(button, &QPushButton::pressed, this, &Carousel::buttonPressed);
         buttons.append(button);
@@ -28,7 +30,7 @@ Carousel::Carousel(QList<ObjectType*> source) {
         list->setViewMode(QListView::ListMode);
         list->setEditTriggers(QListView::NoEditTriggers);
         list->setVisible(current++ == selectedIndex);
-        list->setModel(type->GetModel());
+        list->setModel(type == CarouselTypeResources ? ProjectManager::GetResourceData(section) : ProjectManager::GetObjectData(section));
         lists.append(list);
         layout->addWidget(list);
     }

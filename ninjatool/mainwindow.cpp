@@ -12,6 +12,7 @@
 #include <QAction>
 #include <QCloseEvent>
 #include <QtCore/QCoreApplication>
+#include "projectmanager.h"
 #include "editors/settingswidget.h"
 #include "settingsmanager.h"
 #include "settingsconstants.h"
@@ -19,10 +20,22 @@
 
 const QString WINDOW_KEY = "MainWindow";
 
+static inline QIcon icon_named(QString name) {
+#ifdef __APPLE__
+    static const QString fallbackpath = "%1/../Resources/%2.svg";
+    return QPixmap(fallbackpath.arg(QCoreApplication::applicationDirPath(), name));
+#else
+    static const QString fallbackpath = "%1/Icons/%2.svg";
+    return QIcon::fromTheme(name, QIcon(fallbackpath.arg(QCoreApplication::applicationDirPath(), name)));
+#endif
+}
+
 MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
+    ProjectManager::Init();
     QString configPath = QCoreApplication::applicationDirPath() + "/config.json";
     SettingsManager::Init(configPath);
     setWindowTitle("NinjaTool");
+    setWindowIcon(icon_named("preferences-system"));
     setMinimumSize(320, 320);
     QDesktopWidget dw;
     int height = (int) (dw.screen()->height() * 0.9f);
@@ -41,11 +54,12 @@ MainWindow::MainWindow(QWidget *parent) : QMainWindow(parent) {
     addToolBar(Qt::LeftToolBarArea, toolbar);
     SetupActions();
     tabs = new QTabWidget(this);
-    objects = new Carousel(objectTypes);
-    tabs->addTab(objects, "Objects");
-    resources = new Carousel(resourceTypes);
+    resources = new Carousel(CarouselTypeResources);
     tabs->addTab(resources, "Resources");
+    objects = new Carousel(CarouselTypeObjects);
+    tabs->addTab(objects, "Objects");
     setCentralWidget(tabs);
+    tabs->setEnabled(false);
     loaded = true;
 }
 
@@ -62,16 +76,6 @@ static inline void AddToMenu(QAction *action, QMenu *menu) {
 static inline void AddToMenuAndBar(QAction *action, QMenu *menu, QToolBar *bar) {
     menu->addAction(action);
     bar->addAction(action);
-}
-
-static inline QIcon icon_named(QString name) {
-#ifdef __APPLE__
-    static const QString fallbackpath = "%1/../Resources/%2.svg";
-    return QPixmap(fallbackpath.arg(QCoreApplication::applicationDirPath(), name));
-#else
-    static const QString fallbackpath = "%1/Icons/%2.svg";
-    return QIcon::fromTheme(name, QIcon(fallbackpath.arg(QCoreApplication::applicationDirPath(), name)));
-#endif
 }
 
 void MainWindow::SetupActions() {
@@ -96,6 +100,7 @@ void MainWindow::SetupActions() {
         AddToMenuAndBar(newProject, projectMenu, toolbar);
 
         QAction *loadProject = new QAction(icon_named("document-open"), "Load Project", this);
+        connect(loadProject, &QAction::triggered, this, &MainWindow::openProject);
         AddToMenuAndBar(loadProject, projectMenu, toolbar);
 
         QAction *projectSettings = new QAction(icon_named("document-properties"), "Project Settings", this);
@@ -181,6 +186,18 @@ void MainWindow::newProject() {
     if (w->exec() == QDialog::Accepted) {
         QString projectName = w->GetProjectName();
         QDir projectPath = w->GetProjectPath();
+        bool isLoaded = ProjectManager::LoadProject(projectPath, projectName, [this](int dbVersion, int dataVersion) {
+            return true;
+        });
+        tabs->setEnabled(isLoaded);
+    }
+}
 
+void MainWindow::openProject() {
+    QFileDialog openDialog(this);
+    openDialog.setFileMode(QFileDialog::DirectoryOnly);
+    if (openDialog.exec() == QDialog::Accepted) {
+        QString path = openDialog.directory().path();
+        qDebug() << path;
     }
 }

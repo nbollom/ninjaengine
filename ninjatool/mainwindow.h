@@ -10,7 +10,6 @@
 #include <QToolBar>
 #include <QTabWidget>
 #include "editors/documentwidget.h"
-#include "objecttype.h"
 #include "carousel.h"
 
 class MainWindow : public QMainWindow {
@@ -36,6 +35,7 @@ protected:
     void settingsChanged();
     void widgetClosed(DocumentWidget *widget);
     void newProject();
+    void openProject();
 
 private:
     bool loaded; // ignore layout events until true

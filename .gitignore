@@ -2,3 +2,5 @@
 build/
 cmake-build-*/
 ninjatool/Icons/tango
+.DS_Store
+.stfolder
